@@ -1,0 +1,55 @@
+defaultTasks 'clean','test','aggregate'
+
+apply plugin: 'java'
+
+
+group 'org.LearnSerinity'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "net.serenity-bdd:serenity-gradle-plugin:2.5.10"
+        classpath "net.serenity-bdd:serenity-single-page-report:2.1.4"
+    }
+}
+
+apply plugin: "net.serenity-bdd.serenity-gradle-plugin"
+apply plugin: 'net.serenity-bdd.aggregator'
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+serenity {
+    reports = ["single-page-html"]
+}
+
+dependencies {
+    implementation group: 'net.serenity-bdd', name: 'serenity-core', version: '2.6.0'
+    implementation group: 'net.serenity-bdd', name: 'serenity-screenplay', version: '2.6.0'
+    testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.20.2'
+    implementation group: 'net.serenity-bdd', name: 'serenity-junit', version: '2.6.0'
+    implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.32'
+    testImplementation group: 'junit', name: 'junit', version: '4.13.2'
+    implementation group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.141.59'
+    implementation group: 'net.serenity-bdd', name: 'serenity-screenplay-webdriver', version: '2.6.0'
+
+
+}
+test {
+    testLogging.showStandardStreams = true
+    systemProperties System.getProperties()
+}
+
+gradle.startParameter.continueOnFailure = true
+
+test.finalizedBy(aggregate)
+
+
